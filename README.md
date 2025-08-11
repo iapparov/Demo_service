@@ -122,9 +122,7 @@ go run scripts/messages.go
 
 ---
 
-## Контакты и Swagger
+## Swagger
 
 - Swagger: [docs/swagger.yaml](docs/swagger.yaml)
 - Документация генерируется автоматически и доступна по `/swagger/*`.
-
----
