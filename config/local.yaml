@@ -1,0 +1,8 @@
+env: local #local/prod
+http_port: 8080
+db_name: demo_service
+db_user: user
+db_password: password
+db_url: localhost
+db_port: 5433
+cache_size: 15
