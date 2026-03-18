@@ -33,7 +33,7 @@ func main() {
 			di.StartHTTPServer,
 			di.StartKafkaConsumer,
 			di.LoadCacheOnStart,
-			di.StartPprofServer,
+			di.StartPprofServer, // опционально для профилирования
 		),
 	)
 
