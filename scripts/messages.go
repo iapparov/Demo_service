@@ -4,8 +4,8 @@ import (
 	"context"
 	"encoding/json"
 	"github.com/segmentio/kafka-go"
-	"os"
 	"log"
+	"os"
 )
 
 func main() {
@@ -21,7 +21,7 @@ func main() {
 	}()
 	var msg map[string]any
 	if err := json.Unmarshal(jsonData, &msg); err != nil {
-    	log.Printf("Unmarshal error: %v", err)
+		log.Printf("Unmarshal error: %v", err)
 	}
 
 	err := w.WriteMessages(context.Background(), kafka.Message{

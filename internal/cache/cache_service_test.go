@@ -1,10 +1,10 @@
 package cache
 
 import (
-	"testing"
 	"demoservice/internal/app"
 	"demoservice/internal/config"
 	"github.com/stretchr/testify/assert"
+	"testing"
 )
 
 // Mock PostgresRepo for UploadFromDb
@@ -17,11 +17,11 @@ func (m *mockRepo) CacheLoad(conf *config.Config) ([]*app.Order, error) {
 }
 
 func (m *mockRepo) Save(order *app.Order) error {
-    return nil
+	return nil
 }
 
 func (m *mockRepo) Load(uid string) (*app.Order, error) {
-    return nil, nil
+	return nil, nil
 }
 
 func TestNewOrderCache(t *testing.T) {

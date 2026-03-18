@@ -6,13 +6,13 @@ import (
 	"demoservice/internal/config"
 	"errors"
 	"fmt"
-	"log"
-	"time"
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
+	"log"
+	"time"
 )
 
-type Repository interface{
+type Repository interface {
 	Save(order *app.Order) error
 	Load(uid string) (*app.Order, error)
 	CacheLoad(conf *config.Config) ([]*app.Order, error)
@@ -22,12 +22,12 @@ type PostgresRepo struct {
 	conn *pgxpool.Pool
 }
 
-func NewPostgresRepo(conn *pgxpool.Pool) *PostgresRepo{
-	return &PostgresRepo{conn:conn}
+func NewPostgresRepo(conn *pgxpool.Pool) *PostgresRepo {
+	return &PostgresRepo{conn: conn}
 }
 
-func ConnectDB(conf *config.Config) *pgxpool.Pool{
-	connStr := "postgres://"+conf.DbUser+":"+conf.DbPassword+"@"+conf.DbUrl+":"+conf.DbPort+"/"+conf.DbName
+func ConnectDB(conf *config.Config) *pgxpool.Pool {
+	connStr := "postgres://" + conf.DbUser + ":" + conf.DbPassword + "@" + conf.DbUrl + ":" + conf.DbPort + "/" + conf.DbName
 	context_, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 	conn, err := pgxpool.New(context_, connStr)
@@ -37,7 +37,7 @@ func ConnectDB(conf *config.Config) *pgxpool.Pool{
 	return conn
 }
 
-func (s *PostgresRepo) Save(order *app.Order) error{
+func (s *PostgresRepo) Save(order *app.Order) error {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
@@ -68,8 +68,8 @@ func (s *PostgresRepo) Save(order *app.Order) error{
 		}
 		return err
 	}
-	
-	for _, elem := range order.Items{
+
+	for _, elem := range order.Items {
 		query_items := `INSERT INTO items (
 			order_uid,
 			chrt_id,
@@ -84,7 +84,7 @@ func (s *PostgresRepo) Save(order *app.Order) error{
 			brand,
 			status)
 			VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12);`
-		_, err = tx.Exec(ctx, query_items, order.OrderUid, elem.ChrtId, elem.TrackNumber, elem.Price, elem.Rid, elem.Name, elem.Sale, 
+		_, err = tx.Exec(ctx, query_items, order.OrderUid, elem.ChrtId, elem.TrackNumber, elem.Price, elem.Rid, elem.Name, elem.Sale,
 			elem.Size, elem.TotalPrice, elem.NmId, elem.Brand, elem.Status)
 		if err != nil {
 			log.Printf("Query_items trouble ")
@@ -95,7 +95,6 @@ func (s *PostgresRepo) Save(order *app.Order) error{
 		}
 	}
 
-	
 	p := &order.Payment
 	p_dt := time.Unix(p.PaymentDt, 0)
 	query_payment := `INSERT INTO payments (
@@ -143,11 +142,10 @@ func (s *PostgresRepo) Save(order *app.Order) error{
 	}
 
 	if err := tx.Commit(ctx); err != nil {
-    	log.Printf("Commit error: %v", err)
+		log.Printf("Commit error: %v", err)
 	}
 	return nil
 }
-
 
 func (s *PostgresRepo) Load(uid string) (*app.Order, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
@@ -163,11 +161,11 @@ func (s *PostgresRepo) Load(uid string) (*app.Order, error) {
 			&order.Delivery.Name, &order.Delivery.Phone, &order.Delivery.Zip,
 			&order.Delivery.City, &order.Delivery.Address, &order.Delivery.Region, &order.Delivery.Email,
 		); err != nil {
-    if errors.Is(err, pgx.ErrNoRows) {
-        return nil, fmt.Errorf("delivery not found for order_uid %s", uid)
-    }
-    return nil, err
-}
+		if errors.Is(err, pgx.ErrNoRows) {
+			return nil, fmt.Errorf("delivery not found for order_uid %s", uid)
+		}
+		return nil, err
+	}
 
 	var paymentTime time.Time
 	if err := s.conn.QueryRow(ctx,
@@ -178,11 +176,11 @@ func (s *PostgresRepo) Load(uid string) (*app.Order, error) {
 			&order.Payment.Provider, &order.Payment.Amount, &paymentTime,
 			&order.Payment.Bank, &order.Payment.DeliveryCost, &order.Payment.GoodsTotal, &order.Payment.CustomFee,
 		); err != nil {
-    if errors.Is(err, pgx.ErrNoRows) {
-        return nil, fmt.Errorf("delivery not found for order_uid %s", uid)
-    }
-    return nil, err
-}
+		if errors.Is(err, pgx.ErrNoRows) {
+			return nil, fmt.Errorf("delivery not found for order_uid %s", uid)
+		}
+		return nil, err
+	}
 	order.Payment.PaymentDt = paymentTime.Unix()
 
 	if err := s.conn.QueryRow(ctx,
@@ -194,11 +192,11 @@ func (s *PostgresRepo) Load(uid string) (*app.Order, error) {
 			&order.CustomerId, &order.DeliveryService, &order.Shardkey, &order.SmId,
 			&order.DateCreated, &order.OofShard,
 		); err != nil {
-			if errors.Is(err, pgx.ErrNoRows) {
+		if errors.Is(err, pgx.ErrNoRows) {
 			return nil, fmt.Errorf("delivery not found for order_uid %s", uid)
-    }
-    return nil, err
-}
+		}
+		return nil, err
+	}
 	rows, err := s.conn.Query(ctx,
 		`SELECT chrt_id, track_number, price, rid, name, sale, size, total_price, nm_id, brand, status
 		 FROM items WHERE order_uid = $1`, uid)
@@ -224,7 +222,6 @@ func (s *PostgresRepo) Load(uid string) (*app.Order, error) {
 
 	return &order, nil
 }
-
 
 func (s *PostgresRepo) CacheLoad(conf *config.Config) ([]*app.Order, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)

@@ -4,14 +4,13 @@ import (
 	"bytes"
 	"demoservice/internal/cache"
 	"demoservice/internal/db"
-	//"encoding/json"
-	json "github.com/goccy/go-json" // ускоряем работу с json
 	"log"
 	"net/http"
 	"strconv"
 	"sync"
-
+	//"encoding/json"
 	"github.com/go-chi/chi/v5"
+	json "github.com/goccy/go-json" // ускоряем работу с json
 )
 
 type WebHandler struct {
