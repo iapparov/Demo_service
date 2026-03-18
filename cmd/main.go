@@ -6,22 +6,23 @@
 package main
 
 import (
-	"go.uber.org/fx"
-	"demoservice/internal/config"
-	"demoservice/internal/web"
-	"demoservice/internal/db"
 	"demoservice/internal/cache"
+	"demoservice/internal/config"
+	"demoservice/internal/db"
 	"demoservice/internal/di"
+	"demoservice/internal/web"
+
+	"go.uber.org/fx"
 )
 
-func main(){
+func main() {
 	app := fx.New(
-		
+
 		fx.Provide(
-			config.MustLoad, 
+			config.MustLoad,
 			db.ConnectDB,
 			db.NewPostgresRepo,
-			func (db *db.PostgresRepo) db.Repository{
+			func(db *db.PostgresRepo) db.Repository {
 				return db
 			},
 			cache.NewOrderCache,
@@ -32,6 +33,7 @@ func main(){
 			di.StartHTTPServer,
 			di.StartKafkaConsumer,
 			di.LoadCacheOnStart,
+			di.StartPprofServer,
 		),
 	)
 

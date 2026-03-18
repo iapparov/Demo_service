@@ -1,0 +1,16 @@
+goos: darwin
+goarch: arm64
+pkg: demoservice/internal/web
+cpu: Apple M1
+BenchmarkGetOrder_CacheHit-8    	  747976	      1654 ns/op	    2177 B/op	      14 allocs/op
+BenchmarkGetOrder_CacheHit-8    	  742858	      1587 ns/op	    2177 B/op	      14 allocs/op
+BenchmarkGetOrder_CacheHit-8    	  688299	      1576 ns/op	    2177 B/op	      14 allocs/op
+BenchmarkGetOrder_CacheHit-8    	  787310	      1544 ns/op	    2177 B/op	      14 allocs/op
+BenchmarkGetOrder_CacheHit-8    	  758248	      1520 ns/op	    2177 B/op	      14 allocs/op
+BenchmarkGetOrder_CacheMiss-8   	  802683	      1546 ns/op	    2177 B/op	      14 allocs/op
+BenchmarkGetOrder_CacheMiss-8   	  759397	      1508 ns/op	    2177 B/op	      14 allocs/op
+BenchmarkGetOrder_CacheMiss-8   	  753430	      1514 ns/op	    2177 B/op	      14 allocs/op
+BenchmarkGetOrder_CacheMiss-8   	  807061	      1531 ns/op	    2177 B/op	      14 allocs/op
+BenchmarkGetOrder_CacheMiss-8   	  759340	      1504 ns/op	    2177 B/op	      14 allocs/op
+PASS
+ok  	demoservice/internal/web	13.348s
